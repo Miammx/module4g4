@@ -1,33 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {useState, useEffect} from 'react'
+import "./App.css"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [characters, setCharacters] = useState([]);
+  useEffect(()=>{
+  const getData = async () => {
+    const response = await fetch("https://api.disneyapi.dev/character")
+    const json = await response.json();
+    console.log(json);
+    setCharacters(json.data)
+  }
+  getData()
+
+  },[])
+  console.log(characters);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div style={{ 
+        backgroundColor: 'lightblue', 
+        padding: '20px', 
+        borderRadius: '8px', 
+        width: '100%', 
+        display:'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center'
+      }}>
+        <h1 style={{ fontFamily: 'Georgia, sans-serif' }}>Disney World!</h1>
+        <h2 style={{ fontFamily: 'Georgia, sans-serif' }}>Enjoy a lot of funny moments</h2>
+        {characters.map((character)=>{
+          return (
+            <div className= "characters-container">
+              <h3>{character.name}</h3> 
+              <img src={character.imageUrl}></img>
+            </div>
+          )
+        })}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
